@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(217, 237, 255);  /* Arka plan rengi */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* İçerikleri ortala */
+        }
+
+        h2 {
+            color: #333;  /* Başlık rengi */
+            text-align: center;
+        }
+
+        #messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;  /* Mesaj kutusunun yüksekliği */
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.5;
+            background-color: #fff;  /* Mesaj kutusunun arka plan rengi */
+            border-radius: 5px;  /* Kenar yuvarlama */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* Gölgelendirme efekti */
+            margin-bottom: 10px;  /* Alt boşluk */
+            width: 100%; /* Tam genişlik */
+            max-width: 600px; /* Maksimum genişlik */
+        }
+
+        #messages div {
+            font-size: 14px;
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 3px;  /* Mesajların kenar yuvarlaması */
+            background-color: #e9ecef; /* Mesajların arka plan rengi */
+        }
+
+        #message_input {
+            width: calc(100% - 90px);  /* Giriş kutusunun genişliği */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;  /* Kenar yuvarlama */
+            font-size: 14px;
+            margin-right: 10px;  /* Sağ boşluk */
+            max-width: 500px; /* Maksimum genişlik */
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;  /* Buton rengi */
+            color: white;  /* Buton yazı rengi */
+            border: none;
+            border-radius: 5px;  /* Kenar yuvarlama */
+            cursor: pointer;  /* İmleç değişikliği */
+            transition: background-color 0.3s;  /* Geçiş efekti */
+            width: 75px; /* Butonun genişliği */
+            max-width: 100%; /* Maksimum genişlik */
+        }
+
+        button:hover {
+            background-color: #0056b3;  /* Hover efekti */
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            width: 100%; /* Tam genişlik */
+            max-width: 600px; /* Maksimum genişlik */
+        }
+    </style>
+</head>
+<body>
+    <h2>Chat - {{ username }}</h2>
+    <div id="messages"></div>
+    <div class="input-container">
+        <input id="message_input" placeholder="Mesajınızı yazın..." autocomplete="off"/>
+        <button onclick="sendMessage()">Gönder</button>
+    </div>
+
+    <script type="text/javascript">
+        const socket = io();
+        const maxMessages = 50;  // Görüntülenen maksimum mesaj sayısı
+
+        socket.on('message', function(msg) {
+            const messagesDiv = document.getElementById('messages');
+            const newMessage = document.createElement('div');
+            newMessage.textContent = msg;
+            messagesDiv.appendChild(newMessage);
+
+            // Mesaj sayısını kontrol et ve fazla mesajları kaldır
+            if (messagesDiv.children.length > maxMessages) {
+                messagesDiv.removeChild(messagesDiv.firstChild);
+            }
+
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;  // Son mesaja kaydır
+        });
+
+        // Mesajı gönderme fonksiyonu
+        function sendMessage() {
+            const input = document.getElementById('message_input');
+            const message = input.value;
+            if (message) {
+                socket.send(message);
+                input.value = '';  // Giriş alanını temizle
+            }
+        }
+
+        // Enter tuşuna basma olayını dinleyin
+        document.getElementById('message_input').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();  // Mesaj gönder
+                event.preventDefault();  // Enter tuşunun formu göndermesini engelle
+            }
+        });
+    </script>
+</body>
+</html>

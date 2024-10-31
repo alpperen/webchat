@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0; /* Arka plan rengi */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* İçerikleri ortala */
+            height: 100vh; /* Dikey olarak ortala */
+            justify-content: center; /* Dikey ortalama */
+        }
+
+        h2 {
+            color: #333; /* Başlık rengi */
+            margin-bottom: 20px; /* Alt boşluk */
+        }
+
+        form {
+            background-color: #fff; /* Form arka plan rengi */
+            padding: 20px;
+            border-radius: 8px; /* Kenar yuvarlama */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Gölgelendirme */
+            display: flex;
+            flex-direction: column;
+            width: 300px; /* Form genişliği */
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 10px; /* Alt boşluk */
+            border: 1px solid #ccc; /* Kenar rengi */
+            border-radius: 5px; /* Kenar yuvarlama */
+            font-size: 16px; /* Yazı boyutu */
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff; /* Buton rengi */
+            color: white; /* Buton yazı rengi */
+            border: none; /* Kenar yok */
+            border-radius: 5px; /* Kenar yuvarlama */
+            cursor: pointer; /* İmleç değişikliği */
+            transition: background-color 0.3s; /* Geçiş efekti */
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Hover efekti */
+        }
+    </style>
+</head>
+<body>
+    <h2>Kullanıcı Adı Girin</h2>
+    <form method="POST" action="/chat">
+        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+        <button type="submit">Giriş Yap</button>
+    </form>
+
+    {% if error %}
+    <script>
+        alert("zaten böyle bir kullanıcı var");
+    </script>
+    {% endif %}
+</body>
+</html>
